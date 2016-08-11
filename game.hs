@@ -22,7 +22,6 @@ data Game =  Game { balls :: Balls, bins :: Bins, robot:: Robot, time :: Time } 
 ---------------------------------------------------------------------------------------------------------
 -- Functions  -------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
-
 updateBalls :: Game -> Balls
 updateBalls g = (balls g) \\ caughtBalls -- stationary
     where caughtBalls = catch (robot g) (balls g)
@@ -40,10 +39,10 @@ updateRobot g
           bx = x (ball :: Ball)
           by = y (ball :: Ball)
           ball = head $balls g 
+
 catch :: Robot -> Balls -> Balls
 catch r bs = filter (\b -> x (r :: Robot) == x (b:: Ball)
-                           && y (r :: Robot) == y (b:: Ball)
-                    ) bs
+                           && y (r :: Robot) == y (b:: Ball) ) bs
 
 _updateBins :: Ball -> Bins -> Bins
 _updateBins ball bins = map (\bin -> if (color (bin::Bin) == color (ball::Ball)) 
@@ -60,12 +59,7 @@ play g = if (isComplete g) then [g] else g : play g'
 
 isComplete :: Game -> Bool
 isComplete g = all ((== 1) . colorCount) (bins g) -- in each bin, all the balls are of the same color
-               &&
-               0 == length (balls g) -- all the balls are in the bins
-
-stat :: Game -> String
-stat g = "Game Over"
-
+               && 0 == length (balls g) -- all the balls are in the bins
 ---------------------------------------------------------------------------------------------------------
 -- Set Up Game  -----------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------
@@ -73,10 +67,12 @@ _balls = [Ball {x=0,y=0,color=Yellow},Ball {x=0,y=1,color=Green}]
 _bins = [Bin {ballCount = 0, colorCount = 0, color = Green},Bin {ballCount = 0, colorCount = 0, color = Yellow}]
 _robot = Robot {x=0,y=0,mem = []}
 _time = 0
-
 -----------------------------------------------------------------------------------------------------------
 -- Play! ---------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------
 main =  do
   let g = play (Game {balls = _balls, bins = _bins, robot = _robot, time = _time})
   mapM print g
+-----------------------------------------------------------------------------------------------------------
+-- END OF PROGRAM ---------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
