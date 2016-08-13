@@ -25,6 +25,8 @@ data Game =  Game { balls :: [Ball], bins :: [Bin], robot:: Robot, time :: Int }
 ---------------------------------------------------------------------------------------------------------
 -- Functions
 ---------------------------------------------------------------------------------------------------------
+catch :: (Object a, Object  b) => a -> [b] -> [b]
+catch catcher targets = filter (\t -> (pos catcher) == (pos t)) targets               
 -- TODO: balls are not moving at all.
 -- TODO: add a case for collected
 updateBalls :: Game -> [Ball]
@@ -44,8 +46,6 @@ updateRobot g
           bx = x (ball :: Ball)
           by = y (ball :: Ball)
           ball = head $filter ((/= Caught) . status) $balls g 
-catch :: (Object a, Object  b) => a -> [b] -> [b]
-catch catcher targets = filter (\t -> (pos catcher) == (pos t)) targets               
 play :: Game -> [Game]
 play g = if (isComplete g) then [g] else g : play g'
     where g' = Game {balls = updateBalls g, bins = bins g, robot = updateRobot g, time = (time g) + 1}
